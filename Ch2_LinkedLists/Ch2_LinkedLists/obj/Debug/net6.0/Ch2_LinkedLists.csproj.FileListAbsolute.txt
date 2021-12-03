@@ -96,3 +96,4 @@ C:\Users\yongj\source\repos\c#\CrackingCodingInterview\CodingInterview\Ch2_Linke
 C:\Users\yongj\source\repos\c#\CrackingCodingInterview\CodingInterview\Ch2_LinkedLists\Ch2_LinkedLists\obj\Debug\net6.0\ref\Ch2_LinkedLists.dll
 C:\Users\yongj\source\repos\c#\CrackingCodingInterview\CodingInterview\Ch2_LinkedLists\Ch2_LinkedLists\obj\Debug\net6.0\Ch2_LinkedLists.pdb
 C:\Users\yongj\source\repos\c#\CrackingCodingInterview\CodingInterview\Ch2_LinkedLists\Ch2_LinkedLists\obj\Debug\net6.0\Ch2_LinkedLists.genruntimeconfig.cache
+C:\Users\yongj\source\repos\c#\CrackingCodingInterview\CodingInterview\Ch2_LinkedLists\Ch2_LinkedLists\obj\Debug\net6.0\Ch2_LinkedLists.csproj.AssemblyReference.cache

@@ -12,7 +12,6 @@ namespace Ch2_LinkedLists
         [Test]
         public void Test1()
         {
-            
             Ch2LinkedList question1 = new Ch2LinkedList();
             TLinkedList<char> list = question1.Solution();
             list.WriteContent();

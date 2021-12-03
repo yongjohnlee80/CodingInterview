@@ -26,25 +26,20 @@ namespace Ch2_LinkedLists
         public Node<T>? Next
         {
             get { return next; }
+            set { next = value; }
         }
 
         public Node<T>? Prev
         {
             get { return prev; }
+            set { prev = value; }
         }
 
-        public Node<T> Append(T data)
+        public Node<T>? Delete()
         {
-            if (data == null) return this;
-            this.next = new Node<T>(data);
-            this.next.prev = this;
+            if(this.prev != null) this.prev.next = this.next;
+            if(this.next != null) this.next.prev = this.prev;
             return this.next;
-        }
-
-        public void Delete()
-        {
-            this.prev.next = this.next;
-            this.next.prev = this.prev;
         }
     }
 
@@ -60,47 +55,78 @@ namespace Ch2_LinkedLists
                 head = new Node<T>(data);
                 tail = head;
                 return head;
+            } 
+            else
+            {
+                tail.Next = new Node<T> (data);
+                tail.Next.Prev = tail;
+                tail = tail.Next;
+                return tail;
             }
-            tail = tail.Append(data);
-            return tail;
         }
 
         public Node<T>? LoadArray(T[] data)
         {
-            foreach(T item in data)
+            foreach (T item in data)
             {
                 Append(item);
             }
             return tail;
         }
 
-        public void WriteContent()
+        public void WriteContent(bool reverse = false)
         {
-            Node<T> node = head;
+            Node<T>? node = head;
+            if (reverse) node = tail;
             while (node != null)
             {
                 Console.Write(node.Data);
-                node = node.Next;
+                node = (reverse ? node.Prev : node.Next);
             }
             Console.WriteLine();
         }
 
         public void RemoveDuplicates()
         {
-            Node<T> first = head;
-            Node<T> second;
-            while(first != null)
+            if (head == null) return;
+
+            HashSet<T> set = new HashSet<T>();
+            Node<T>? current = head;
+            Node<T>? previous = null;
+
+            while (current != null)
             {
-                second = tail;
-                while(second.Prev != head || second.Prev != null)
+                if (set.Contains(current.Data))
                 {
-                    if(first.Data.Equals(second.Data))
-                    {
-                        second.Delete();
-                    }
-                    second = second.Prev;
+                    previous.Next = current.Next;
+                    current.Next.Prev = previous; 
                 }
+                else
+                {
+                    set.Add(current.Data);
+                    previous = current;
+                }
+                current = current.Next;
             }
+
+            //Node<T>? first = head;
+            //Node<T>? second = first.Next;
+            //while (first.Next != null)
+            //{
+            //    while (second != null)
+            //    {
+            //        if (first.Data.Equals(second.Data))
+            //        {
+            //            second = second.Delete();
+            //        }
+            //        else
+            //        {
+            //            second = second.Next;
+            //        }
+            //    }
+            //    first = first.Next;
+            //    second = first.Next;
+            //}
         }
     }
     internal class Ch2LinkedList

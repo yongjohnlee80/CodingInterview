@@ -35,8 +35,9 @@ namespace Ch2_LinkedLists
         /// </summary>
         public T? Data
         {
-            get { return data; }
-
+            // data field is immutable once initialized (no access point)
+            get { return data; } 
+            // implement setter if it is necessary to modify the value.
         }
         public Node<T>? Next
         {
@@ -167,6 +168,7 @@ namespace Ch2_LinkedLists
             Node<T>? current = head;
             Node<T>? runner = null;
 
+            ///**********************************************************************************************
             /// First Approach. TC: O(n)
             /// This approach uses HashSet to see whether the current data value has been detected earlier.
             /// Note that runner follows behind the current node.
@@ -191,6 +193,7 @@ namespace Ch2_LinkedLists
             //    current = current.Next; // Next!
             //}
 
+            ///**********************************************************************************************
             /// Second Approach. TC: O(n^2)
             /// The interview question also asks us not to use a temporary buffer to solve this problem.
             /// In this case, the runner node iterates ahead of the current node to the end of the list
@@ -205,7 +208,7 @@ namespace Ch2_LinkedLists
                 while(runner != null)
                 {
                     if(current.Data.Equals(runner.Data))
-                            // if values are the same.
+                            // if values are the same. Also, the current node cannot possibly be null despite the warning.
                     {
                         Link(runner.Prev, runner.Next); 
                                 // Link the previous and following nodes (deletes the runner node)

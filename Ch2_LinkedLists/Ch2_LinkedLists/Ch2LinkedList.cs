@@ -75,21 +75,44 @@ namespace Ch2_LinkedLists
         // Fileds
         Node<T>? head = null;
         Node<T>? tail = null;
+        int count = 0;
+
+        /// <summary>
+        /// Getters and Setters
+        /// </summary>
+        public int Count
+        {
+            get { return count; }
+        }
 
         /// <summary>
         /// Method: Link
         /// Links two nodes, a and b.
-        /// a must be the preceding node.
+        /// a must be the preceding node where b is the following node.
+        /// There are two use cases for this method.
+        /// 1. To delete a node, preceding node and following node of the current
+        ///     node is linked.
+        /// 2. To insert a node, a node is created, then inserted in between the two nodes.
+        /// NOTE: Link method can also be used to append; however, use Append method already
+        ///         provided in this class, which already handles special cases, such as 
+        ///         creating the head node and incrementing the count field.
         /// </summary>
         /// <param name="a">preceding node</param>
         /// <param name="b">following node</param>
         public static void Link(Node<T>? a, Node<T>? b)
         {
-            if (a == null) return;
-                    // preceding node, a cannot be null.
+            if (a == null)
+                    /// (special case)
+                    /// When Link method is called to remove head node,
+                    /// the following node, b will become the new head node.
+            {
+                a = b;
+                return;
+            }
             a.Next = b;
             if(b != null) b.Prev = a;
-                    // if a is tail node, b is null.
+                    /// Prevents a special case when a is the tail node.
+                    /// if a is tail node, b is null.
         }
 
         /// <summary>
@@ -117,6 +140,7 @@ namespace Ch2_LinkedLists
                                         /// thus, this is simpler and more efficient.
                 tail = tail.Next; // update tail node. Very IMPORTANT!
             }
+            count++;
         }
 
         /// <summary>
@@ -146,7 +170,7 @@ namespace Ch2_LinkedLists
             if (reverse) node = tail; // if reverse mode.
             while (node != null)
             {
-                Console.Write(node.Data);
+                Console.Write($"{node.Data} ");
                 node = (reverse ? node.Prev : node.Next);
             }
             Console.WriteLine();
@@ -156,7 +180,8 @@ namespace Ch2_LinkedLists
         /// Method: RemoveDuplicates
         /// This method removes duplicates of values in the list, keeping only the first occurence in the list.
         /// Answer to the Interview Question 2.1
-        /// Note that there are two methods as described in the following.
+        /// Note that there are two approaches implemented as described in the following.
+        /// One of the approaches is naturally commented out.
         /// </summary>
         /// <returns>returns self to the user, giving flexibility to operate with updated instance.</returns>
         public TLinkedList<T> RemoveDuplicates()
@@ -177,12 +202,13 @@ namespace Ch2_LinkedLists
             ///
             //HashSet<T> set = new HashSet<T>(); // HashSet for data values.
             //while (current != null)
-            //        // iterate through the list.
+            //// iterate through the list.
             //{
             //    if (set.Contains(current.Data))
-            //            // when the set already contains the value,
+            //    // when the set already contains the value,
             //    {
             //        Link(runner, current.Next); // delete the current node.
+            //        count--;
             //    }
             //    else
             //    {
@@ -212,6 +238,7 @@ namespace Ch2_LinkedLists
                     {
                         Link(runner.Prev, runner.Next); 
                                 // Link the previous and following nodes (deletes the runner node)
+                        count--;
                     }
                     runner = runner.Next; // runner node iterates.
                 }
@@ -219,6 +246,28 @@ namespace Ch2_LinkedLists
             }
 
             return this; // returns self.
+        }
+
+        /// <summary>
+        /// Method: GetNodeFromLast
+        /// Answer to Interview Question 2.2
+        /// This question dictates that we find the kth element from the last in a singly
+        /// linked list. Thus, tail node and prev pointer are not used.
+        /// This method treats the linked list as if it is a singly linked list.
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public Node<T>? GetNodeFromLast(int k)
+        {
+            int pos = Count - k;
+                    // subtract k from the element count.
+            if (pos < 0) return null;
+                    // k is larger than the length of the list.
+            Node<T>? current = head;
+                    // starts from the head of the list.
+            while(pos-- > 0) current = current.Next;
+                    // move the current node to the correct position.
+            return current;
         }
     }
 }

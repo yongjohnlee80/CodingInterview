@@ -98,7 +98,7 @@ namespace Ch2_LinkedLists
         [Test]
         public void SumLists2_5()
         {
-            /// Initialize the data values.
+            /// Initialize the data values. These digits are in reverse order in the lists.
             int[] data1 = { 7, 1, 6 };
             int[] data2 = { 5, 9, 2 };
 
@@ -111,6 +111,26 @@ namespace Ch2_LinkedLists
 
             /// Compute summation of the integers.
             var list3 = TLinkedList<int>.SumLists(list1, list2);
+
+            list3.WriteContent();
+        }
+
+        [Test]
+        public void SumLists2_5B()
+        {
+            /// Initialize the data values. These digits are in normal order in the lists.
+            int[] data1 = { 6, 1, 7 };
+            int[] data2 = { 2, 9, 5 };
+
+            /// Initialize two lists and load them with data.
+            TLinkedList<int> list1 = new TLinkedList<int>();
+            list1.LoadArray(data1);
+
+            TLinkedList<int> list2 = new TLinkedList<int>();
+            list2.LoadArray(data2);
+
+            /// Compute summation of the integers.
+            var list3 = TLinkedList<int>.SumLists2(list1, list2);
 
             list3.WriteContent();
         }

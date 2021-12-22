@@ -477,5 +477,74 @@ namespace Ch2_LinkedLists
             }
             return result;
         }
+
+        /// <summary>
+        /// Method: SumLists2
+        /// Answer to the question 2.5 second half.
+        /// The differnece between the first part is that the digits are in normal order
+        /// </summary>
+        /// <param name="list1"></param>
+        /// <param name="list2"></param>
+        /// <returns></returns>
+        public static TLinkedList<int> SumLists2(TLinkedList<int> list1, TLinkedList<int> list2)
+        {
+            /// resulting list.
+            TLinkedList<int> result = new TLinkedList<int>();
+
+            Node<int> node1 = list1.head; // head of the first list.
+            Node<int> node2 = list2.head; // head of the second list.
+
+            int sum = 0; // sum of each digit place.
+            int carry = 0; // carry over value
+                           // .
+            /// The following codes deals with uneven lengths between the two lists.
+            /// longer list contains higher digit values so that they should be taken care of 
+            /// before entering the summing part of the code.
+            int k = list1.Count - list2.Count;
+            while (k != 0)
+            {
+                if (k < 0) // if list2 is longer, ...
+                {
+                    /// take a digit from list2 and put it in the resulting list.
+                    result.Append(node2.Data);
+                    node2 = node2.Next;
+                    k++;
+                }
+                else // if list1 is longer, ...
+                {
+                    /// take a digit from list1 and put it in the resulting list.
+                    result.Append(node1.Data);
+                    node1 = node1.Next;
+                    k--;
+                }
+            }
+
+            while (node1 != null) // Now the list contains the same number of nodes
+            {
+                /// For any carryover values are multiplied by 10 to
+                /// represent they are one digit higher.
+                sum *= 10;
+
+                /// Take a digit from the first list
+                sum += node1.Data;
+                node1 = node1.Next;
+                
+                /// take a digit from the second list.
+                sum += node2.Data;
+                node2 = node2.Next;
+
+                /// if the current digit produces carryover, 
+                /// put it in the resulting list
+                if (sum > 9)
+                {
+                    result.Append(sum / 10);
+                    sum = sum % 10;
+                }
+            }
+            /// Must take care of the very last digit as shown below.
+            result.Append(sum);
+            
+            return result;
+        }
     }
 }

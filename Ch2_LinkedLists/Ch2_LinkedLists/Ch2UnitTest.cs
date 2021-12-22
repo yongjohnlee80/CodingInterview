@@ -73,16 +73,46 @@ namespace Ch2_LinkedLists
             list.WriteContent();
         }
 
+        /// <summary>
+        /// Solution to Question 2.4
+        /// Partitions the nodes based on their values in relation to the
+        /// given partition value. Nodes containing smaller values are placed
+        /// on the left and vice versa.
+        /// </summary>
         [Test]
         public void Partition2_4()
         {
+            /// Initialize the linked list and load the integers to the list.
             TLinkedList<int> list = new TLinkedList<int>();
             int[] data = { 3, 5, 8, 5, 10, 2, 1 };
             list.LoadArray(data);
 
+            /// Partition the list with value, 5.
+            /// Any nodes with smaller than 5 are placed on the left
+            /// and vice versa.
             list.Partition(5);
 
             list.WriteContent();
+        }
+
+        [Test]
+        public void SumLists2_5()
+        {
+            /// Initialize the data values.
+            int[] data1 = { 7, 1, 6 };
+            int[] data2 = { 5, 9, 2 };
+
+            /// Initialize two lists and load them with data.
+            TLinkedList<int> list1 = new TLinkedList<int>();
+            list1.LoadArray(data1);
+
+            TLinkedList<int> list2 = new TLinkedList<int>();
+            list2.LoadArray(data2);
+
+            /// Compute summation of the integers.
+            var list3 = TLinkedList<int>.SumLists(list1, list2);
+
+            list3.WriteContent();
         }
     }
 }

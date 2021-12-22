@@ -53,6 +53,7 @@ namespace Ch2_LinkedLists
 
         public int CompareTo(Node<T>? other)
         {
+            if (other == null) return 1;
             return Convert.ToInt32(data).CompareTo(Convert.ToInt32(other.data));
         }
 
@@ -82,9 +83,6 @@ namespace Ch2_LinkedLists
         protected Node<T>? head = null;
         protected Node<T>? tail = null;
         int count = 0;
-
-        //protected Node<T> Head { get { return head; } set { head = value; } }
-        //protected Node<T> node { get { return tail; } set { tail = value; } }
 
         /// <summary>
         /// Getters and Setters
@@ -409,6 +407,75 @@ namespace Ch2_LinkedLists
             /// update this linked list with the NEW ORDER of nodes.
             this.head = small.head;
             this.tail = big.tail;
+        }
+
+        /// <summary>
+        /// Method: SumLists
+        /// Answer to Interview Question 2.5
+        /// two lists containing single digit numbers as nodes are added together and 
+        /// produce a third linked list that contains the resulting sum of the two lists.
+        /// Simply put, each list is a representation of a single integer value where each node
+        /// is considered as a single digit.
+        /// These lists are in reverse order where 1's digit is at the head of the list.
+        /// So read them in reverse order when you print the contents of the lists.
+        /// </summary>
+        /// <param name="list1"></param>
+        /// <param name="list2"></param>
+        /// <returns></returns>
+        public static TLinkedList<int> SumLists(TLinkedList<int> list1, TLinkedList<int> list2)
+        {
+            var result = new TLinkedList<int>(); // This is where the output is going to be.
+
+            Node<int> node1 = list1.head; // head of the first list.
+            Node<int> node2 = list2.head; // head of the second list.
+
+            int sum = 0; // sum of each digit place.
+            int carry = 0; // carry over value.
+
+            /// This loop continues until both lists are completely spent
+            /// with an exception of last nodes producing an carryover value.
+            /// In that exception one more iteration is to be done to accomodate the 
+            /// last digit in the new list.
+            while (node1 != null || node2 != null || sum > 0)
+            {
+                /// Take a digit from the first list
+                if(node1 != null)
+                {
+                    sum += node1.Data;
+                    node1 = node1.Next;
+                }
+                /// take a digit from the second list.
+                if(node2 != null)
+                {
+                    sum += node2.Data;
+                    node2 = node2.Next;
+                }
+                /// If a carryover (overflow) is produced, ...
+                if(sum > 9)
+                {
+                    carry = sum / 10; // compute the carryover portion.
+                    sum = sum % 10; // only a single digit number in the resulting digit.
+                }
+
+                /// Create a node with the resulting digit in the output list.
+                result.Append(sum);
+
+                /// resetting the flag variables
+                if(carry > 0)
+                    /// if there was a carryover value then
+                    /// it's carried over to the sum variabler for 
+                    /// next iteration.
+                {
+                    sum = carry;
+                    carry = 0;
+                }
+                else
+                    /// otherwise, reset sum to zero.
+                {
+                    sum = 0;
+                }
+            }
+            return result;
         }
     }
 }

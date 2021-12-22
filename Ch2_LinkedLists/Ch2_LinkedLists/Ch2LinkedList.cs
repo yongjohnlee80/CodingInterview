@@ -17,7 +17,7 @@ namespace Ch2_LinkedLists
     /// Type Node was created.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class Node<T>
+    internal class Node<T> : IComparable<Node<T>>
     {
         // Fields.
         Node<T>? next = null; // pointer to the next link, null if tail.
@@ -38,6 +38,7 @@ namespace Ch2_LinkedLists
             // data field is immutable once initialized (no access point)
             get { return data; } 
             // implement setter if it is necessary to modify the value.
+            set { data = value; }
         }
         public Node<T>? Next
         {
@@ -48,6 +49,11 @@ namespace Ch2_LinkedLists
         {
             get { return prev; }
             set { prev = value; }
+        }
+
+        public int CompareTo(Node<T>? other)
+        {
+            return Convert.ToInt32(data).CompareTo(Convert.ToInt32(other.data));
         }
 
         /// <summary>
@@ -73,9 +79,12 @@ namespace Ch2_LinkedLists
     internal class TLinkedList<T>
     {
         // Fileds
-        Node<T>? head = null;
-        Node<T>? tail = null;
+        protected Node<T>? head = null;
+        protected Node<T>? tail = null;
         int count = 0;
+
+        //protected Node<T> Head { get { return head; } set { head = value; } }
+        //protected Node<T> node { get { return tail; } set { tail = value; } }
 
         /// <summary>
         /// Getters and Setters
@@ -141,6 +150,35 @@ namespace Ch2_LinkedLists
                 tail = tail.Next; // update tail node. Very IMPORTANT!
             }
             count++;
+        }
+
+        /// <summary>
+        /// Method: Append
+        /// Second version of Append
+        /// Append an already existing node at the end of the list.
+        /// </summary>
+        /// <param name="node"></param>
+        public void Append(Node<T> node)
+        {
+            /// Eliminates side effects by isolating the node
+            /// if the node is from an exisiting linked list.
+            node.Prev = null;
+            node.Next = null;
+            
+            /// if this is the very first element...
+            if(head == null || tail == null)
+            {
+                head = node;
+                tail = node;
+            }
+            /// otherwise, ...
+            else
+            {
+                tail.Next = node;
+                tail.Next.Prev = tail;
+
+                tail = tail.Next; // update the tail node.
+            }
         }
 
         /// <summary>
@@ -294,10 +332,22 @@ namespace Ch2_LinkedLists
         /// <param name="node"></param>
         public void DeleteMiddleNode(Node<T> node)
         {
-            if(node != null && node != this.head && node != this.tail)
-            {
-                Link(node.Prev, node.Next);
-            }
+            /// The following codes are implemented as doubly linked list...
+            //if(node != null && node != this.head && node != this.tail)
+            //{
+            //    Link(node.Prev, node.Next);
+            //}
+
+            /// The Following codes are implemented as singly linked list...
+            if(node.Prev == null || node.Next == null) return;
+            Node<T> next = node.Next;
+
+            node.Data = next.Data;
+            node.Next = next.Next;
+
+            node.Prev = next.Prev;  /// this line won't be necessary for singly linked list but 
+                                    /// we have doubly linked list here so we have it here for compatibility
+                                    /// with the rest of the code
         }
 
         /// <summary>
@@ -310,6 +360,55 @@ namespace Ch2_LinkedLists
         public void DeleteMiddleNode(T value)
         {
             DeleteMiddleNode(FindNode(value));
+        }
+
+        /// <summary>
+        /// Method: Partition
+        /// Answer to Interview Question 2.4
+        /// Partition the list by a given value.
+        /// Nodes containing smaller values will be placed on the left while others are 
+        /// placed on the right.
+        /// For simplicity, the generic value, T, will be treated as int32
+        /// </summary>
+        /// <param name="value"></param>
+        public void Partition(T value)
+        {
+            /// linked lists for smaller values and bigger values.
+            TLinkedList<T> small = new TLinkedList<T>();
+            TLinkedList<T> big = new TLinkedList<T>();
+
+            var node = head; // let's begin with the head node.
+
+            while(node != null)
+                // until the last element. The Big O is O(n).
+            {
+                var next = node.Next; // keep the next node before any modification to the node.
+
+                /// the followings are very important steps to isolate the node
+                /// from the previous list. The followings are commented out only because
+                /// the Append method used here automatically performs the isolation procedure.
+                //node.Prev = null;
+                //node.Next = null;
+
+                if (Convert.ToInt32(node.Data) < Convert.ToInt32(value))
+                    /// Comparing T types as if they are Int32.
+                    /// In real life, we are most likely to accomodate other data type situations.
+                {
+                    small.Append(node); 
+                            // append the node to the small list if it is smaller than the partitioning value.
+                }
+                else
+                {
+                    big.Append(node); // otherwise, append it to the big list.
+                }
+                node = next; // NEXT!!!
+            }
+
+            Link(small.tail, big.head); // Connect the small and big lists.
+
+            /// update this linked list with the NEW ORDER of nodes.
+            this.head = small.head;
+            this.tail = big.tail;
         }
     }
 }

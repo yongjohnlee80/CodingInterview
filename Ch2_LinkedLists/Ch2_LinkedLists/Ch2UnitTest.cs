@@ -72,5 +72,17 @@ namespace Ch2_LinkedLists
 
             list.WriteContent();
         }
+
+        [Test]
+        public void Partition2_4()
+        {
+            TLinkedList<int> list = new TLinkedList<int>();
+            int[] data = { 3, 5, 8, 5, 10, 2, 1 };
+            list.LoadArray(data);
+
+            list.Partition(5);
+
+            list.WriteContent();
+        }
     }
 }

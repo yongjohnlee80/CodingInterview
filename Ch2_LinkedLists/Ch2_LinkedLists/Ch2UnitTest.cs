@@ -95,6 +95,11 @@ namespace Ch2_LinkedLists
             list.WriteContent();
         }
 
+        /// <summary>
+        /// Solution to Question 2.5
+        /// Adding two linked list. Each list contains nodes with single digit.
+        /// Each lists are in reverse order, meaning the 1's digits are at the head.
+        /// </summary>
         [Test]
         public void SumLists2_5()
         {
@@ -115,6 +120,12 @@ namespace Ch2_LinkedLists
             list3.WriteContent();
         }
 
+        /// <summary>
+        /// Solution to Question 2.5 Follow up question.
+        /// Adding two linked list similar to the previous solution.
+        /// This time, however, the lists are in normal orders, meaning
+        /// 1's digits are at the tail.
+        /// </summary>
         [Test]
         public void SumLists2_5B()
         {
@@ -133,6 +144,21 @@ namespace Ch2_LinkedLists
             var list3 = TLinkedList<int>.SumLists2(list1, list2);
 
             list3.WriteContent();
+        }
+
+        /// <summary>
+        /// Solutoin to Question 2.6.
+        /// Checks whether a linked list is a palindrome or not.
+        /// </summary>
+        [Test]
+        public void CheckPalindrome2_6()
+        {
+            string data = "ABCDDDCBA";
+
+            TLinkedList<char> list = new TLinkedList<char>();
+            list.LoadArray(data.ToCharArray());
+
+            Assert.That(list.CheckPalindrome(), Is.True);
         }
     }
 }

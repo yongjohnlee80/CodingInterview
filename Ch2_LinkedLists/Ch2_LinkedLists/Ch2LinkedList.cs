@@ -82,7 +82,7 @@ namespace Ch2_LinkedLists
         // Fileds
         protected Node<T>? head = null;
         protected Node<T>? tail = null;
-        int count = 0;
+        protected int count = 0;
 
         /// <summary>
         /// Getters and Setters
@@ -546,5 +546,99 @@ namespace Ch2_LinkedLists
             
             return result;
         }
+
+        /// <summary>
+        /// Method: isEqual
+        /// Method checks the contents of the list.
+        /// Returns true if they are identical.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool isEqual(TLinkedList<T> other)
+        {
+            if(this.Count != other.Count) return false;
+            Node<T> node1 = this.head;
+            Node<T> node2 = other.head;
+
+            while(node1 != null)
+            {
+                if (!node1.Data.Equals(node2.Data)) return false;
+                node1 = node1.Next;
+                node2 = node2.Next;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Method: GetReversedList
+        /// Returns a reversed linked list.
+        /// </summary>
+        /// <returns></returns>
+        public TLinkedList<T> GetReverseList()
+        {
+            /// The following implementation make use of the doubly linked
+            /// list traits.
+            TLinkedList<T> reversed = new TLinkedList<T>();
+            Node<T> node = this.tail;
+            while(node != null)
+            {
+                reversed.Append(node.Data);
+                node = node.Prev;
+            }
+            return reversed;
+
+
+            /// The following implementations are treating TLinkedList structure
+            /// as if it is a singly linked list.
+            //TLinkedList<T> reversed = new TLinkedList<T>();
+            //reversed.count = this.Count;
+
+            //Node<T> node = this.head;
+
+            //reversed.tail = reversed.head;
+            //while(node != null)
+            //{
+            //    Node<T> temp = new Node<T>(node.Data);
+            //    Link(temp, reversed.head);
+            //    reversed.head = temp;
+            //    node = node.Next;
+            //}
+
+            //node = reversed.head;
+            //while(node.Next != null) node = node.Next;
+            //reversed.tail = node;
+
+            //return reversed;
+        }
+
+        /// <summary>
+        /// Method: CheckPalindrome
+        /// Answer to the interview question 2.6
+        /// The method checks whether the list is palindrome or not.
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckPalindrome()
+        {
+            /// Using Doubly Linked List Approach.
+            /// This approach simply compares the iteration of nodes from head
+            /// and tail are the same or not.
+            /// 
+            //Node<T>? node1 = this.head;
+            //Node<T>? node2 = this.tail;
+
+            //if (node1 == null || node2 == null) return false;
+            //while (node1 != null)
+            //{
+            //    if (!node1.Data.Equals(node2.Data)) return false;
+            //    /// as soon as difference is found, return false.
+            //    node1 = node1.Next;
+            //    node2 = node2.Prev;
+            //}
+            //return true; /// passed!!! truely, indded a palindrome.
+
+            TLinkedList<T> reversed = GetReverseList();
+            return isEqual(reversed);
+        }
+
     }
 }

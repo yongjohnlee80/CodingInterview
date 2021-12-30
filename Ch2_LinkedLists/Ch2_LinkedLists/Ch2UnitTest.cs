@@ -160,5 +160,26 @@ namespace Ch2_LinkedLists
 
             Assert.That(list.CheckPalindrome(), Is.True);
         }
+
+        /// <summary>
+        /// Solution to Question 2.8.
+        /// </summary>
+        [Test]
+        public void CheckLoop2_8()
+        {
+            string data = "ABCDEFGHIJKLMN";
+
+            TLinkedList<char> list = new TLinkedList<char>();
+            list.LoadArray(data.ToCharArray());
+
+            var node = list.FindNode('H');
+
+            /// The following operations are normally illegal as the head and tail node are 
+            /// read only and the class automatically maintains them.
+            /// However, to allow this interview question, I have created a setter for tail node
+            list.Tail = node;
+
+            Assert.AreEqual(true, list.IsCorrupt());
+        }
     }
 }

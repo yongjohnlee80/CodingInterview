@@ -84,6 +84,13 @@ namespace Ch2_LinkedLists
         protected Node<T>? tail = null;
         protected int count = 0;
 
+        public Node<T>? Head { get { return head; } }
+        public Node<T>? Tail 
+        { 
+            get { return tail; } 
+            set { tail = value; } // !! This was an added security breach to allow Question 2_8 !!
+        }
+
         /// <summary>
         /// Getters and Setters
         /// </summary>
@@ -640,5 +647,64 @@ namespace Ch2_LinkedLists
             return isEqual(reversed);
         }
 
+        /// <summary>
+        /// Method: IsIntersectWIth
+        /// Answer to the interview question 2.7
+        /// The method that checks whether two lists contains an exactly same
+        /// node by its reference value of the object.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public Node<T> IsIntersectWith(TLinkedList<T> other)
+        {
+            Node<T> list1 = head;
+
+            while(list1 != null)
+            {
+                Node<T> list2 = other.head;
+
+                while (list2 != null)
+                {
+                    if(list1.Equals(list2)) { return list1; }
+                    list2 = list1.Next;
+                }
+                list1 = list1.Next;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Method: TraverseNode
+        /// Safe way to move nodes in the list.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="steps"></param>
+        protected void TraverseNode(Node<T> node, int steps = 1)
+        {
+            while(node != null && steps > 0)
+            {
+                node = node.Next;
+                steps--;
+            }
+        }
+
+        /// <summary>
+        /// Method: IsCorrupt
+        /// Checks whether a list is cyclic.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsCorrupt()
+        {
+            Node<T> hare = head;
+            Node<T> turtle = head;
+
+            while(hare != null)
+            {
+                if(hare == turtle) return true;
+                TraverseNode(turtle, 1);
+                TraverseNode(hare, 2);
+            }
+            return false;
+        }
     }
 }

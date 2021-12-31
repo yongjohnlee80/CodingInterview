@@ -88,7 +88,7 @@ namespace Ch2_LinkedLists
         public Node<T>? Tail 
         { 
             get { return tail; } 
-            set { tail = value; } // !! This was an added security breach to allow Question 2_8 !!
+            //set { tail = value; } // !! This was an added security breach to allow Question 2_8 !!
         }
 
         /// <summary>
@@ -679,14 +679,15 @@ namespace Ch2_LinkedLists
         /// </summary>
         /// <param name="node"></param>
         /// <param name="steps"></param>
-        protected void TraverseNode(Node<T> node, int steps = 1)
+        public void TraverseNode(ref Node<T> node, int steps = 1)
         {
-            while(node != null && steps > 0)
+            while (node != null && steps > 0)
             {
                 node = node.Next;
                 steps--;
             }
         }
+
 
         /// <summary>
         /// Method: IsCorrupt
@@ -700,11 +701,38 @@ namespace Ch2_LinkedLists
 
             while(hare != null)
             {
-                if(hare == turtle) return true;
-                TraverseNode(turtle, 1);
-                TraverseNode(hare, 2);
+                TraverseNode(ref turtle, 1);
+                TraverseNode(ref hare, 2);
+                if (hare == turtle) return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Method: GetLoopHead
+        /// Interview Quesiton 2.8 Solution.
+        /// This method returns the head node of a cycle
+        /// </summary>
+        /// <returns></returns>
+        public Node<T> GetLoopHead()
+        {
+            Node<T> hare = head;
+            Node<T> turtle = head;
+
+            while (hare != null)
+            {
+                TraverseNode(ref turtle, 1);
+                TraverseNode(ref hare, 2);
+                if (hare == turtle) break;
+            }
+
+            turtle = head;
+            while(true)
+            {
+                TraverseNode(ref hare, 1);
+                TraverseNode(ref turtle, 1);
+                if(hare == turtle) return hare;
+            }
         }
     }
 }

@@ -176,10 +176,11 @@ namespace Ch2_LinkedLists
 
             /// The following operations are normally illegal as the head and tail node are 
             /// read only and the class automatically maintains them.
-            /// However, to allow this interview question, I have created a setter for tail node
-            list.Tail = node;
+            list.FindNode('N').Next = node;
+            node.Prev = list.FindNode('N');
 
-            Assert.AreEqual(true, list.IsCorrupt());
+            //System.Console.WriteLine(list.GetLoopHead().Data);
+            Assert.AreEqual('H', list.GetLoopHead().Data);
         }
     }
 }

@@ -548,4 +548,67 @@ namespace Ch3_Stacks_Queues
             return data;
         }
     }
+
+    /// <summary>
+    /// Type: StackQueue
+    /// This data structure implments two stacks to represent a queue
+    /// Solution to interview question 3.4
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    internal class StackQueue<T> : MyStack<T>
+    {
+        /// <summary>
+        /// This second stack is the reversed stack to pop the oldest element from the original stack.
+        /// </summary>
+        protected MyStack<T> queue = new MyStack<T>();
+
+        /// <summary>
+        /// Method: Enqueue
+        /// Simply pushes an element into the stack.
+        /// </summary>
+        /// <param name="value"></param>
+        public void Enqueue(T value)
+        {
+            Push(value);
+        }
+
+        /// <summary>
+        /// Method: Dequeue
+        /// Slightly more complicated than enqueueing
+        /// if the second stack is empty, the first stack is emptied into the second stack
+        /// reversing its order to act as queue, which takes out the oldest element first.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public T Dequeue()
+        {
+            if(queue.IsEmpty())
+                /// Checks whether the second stack is empty or not.
+            {
+                while(!base.IsEmpty()) { queue.Push(Pop()); }
+                        // Empties the first stack into the second stack.
+                if (queue.IsEmpty()) throw new InvalidOperationException("Nothing to POP");
+                else
+                {
+                    // Pops the oldest element, which is from the second stack.
+                    return queue.Pop();
+                }
+            }
+            else
+            {
+                // Pops the oldeest element, which is from the second stack.
+                return queue.Pop();
+            }
+        }
+
+        /// <summary>
+        /// Method: IsEmpty
+        /// It is empty only when both stacks are emptied.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEmpty()
+        {
+            return (base.IsEmpty() && queue.IsEmpty());
+        }
+    }
 }

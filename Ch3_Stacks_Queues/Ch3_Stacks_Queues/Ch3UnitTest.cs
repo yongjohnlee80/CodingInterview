@@ -79,5 +79,24 @@ namespace Ch3_Stacks_Queues
                 System.Console.WriteLine(stack.Pop());
             }
         }
+
+        /// <summary>
+        /// Interview Question 3.4
+        /// </summary>
+        [Test]
+        public void QueueViaStack()
+        {
+            var queue = new StackQueue<int>();
+
+            for (var i = 1; i <= 10; i++)
+            {
+                queue.Enqueue(i);
+            }
+
+            while(!queue.IsEmpty())
+            {
+                System.Console.WriteLine(queue.Dequeue());
+            }
+        }
     }
 }

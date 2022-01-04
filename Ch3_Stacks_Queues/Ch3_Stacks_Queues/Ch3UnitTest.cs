@@ -98,5 +98,52 @@ namespace Ch3_Stacks_Queues
                 System.Console.WriteLine(queue.Dequeue());
             }
         }
+
+        /// <summary>
+        /// Interview Question 3.5
+        /// </summary>
+        [Test]
+        public void SortStack()
+        {
+            var stack = new MyStack<int>();
+
+            int[] data = { 5, 6, 3, 1, 4, 2, 7 };
+
+            stack.LoadArray(data);
+            stack.Sort();
+
+            while (!stack.IsEmpty())
+            {
+                System.Console.WriteLine(stack.Pop());
+            }
+        }
+
+        /// <summary>
+        /// Interview Question 3.6
+        /// </summary>
+        [Test]
+        public void AnimalShelter()
+        {
+            AnimalShelter SPCA = new AnimalShelter();
+            SPCA.Enqueue(new Cat("Tiger", "Persian Cat"));
+            SPCA.Enqueue(new Cat("Roma", "Bobcat"));
+            SPCA.Enqueue(new Dog("Poo", "Golden Retriver"));
+            SPCA.Enqueue(new Dog("Digger", "Presa Canary"));
+
+
+            var adopt = SPCA.DequeueAny();
+            PrintPet(adopt);
+
+            adopt = SPCA.DequeueDog();
+            PrintPet(adopt);
+
+            adopt = SPCA.DequeueAny();
+            PrintPet(adopt);
+
+            void PrintPet(Pet p)
+            {
+                System.Console.WriteLine($"Name: {p.Name}, Desc: {p.Description}, Type: {p.Type()}");
+            }
+        }
     }
 }

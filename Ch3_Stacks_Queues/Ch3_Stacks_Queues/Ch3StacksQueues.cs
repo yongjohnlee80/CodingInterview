@@ -282,6 +282,52 @@ namespace Ch3_Stacks_Queues
 
             return Top.Data;
         }
+
+        /// <summary>
+        /// Method: Sort
+        /// Solution to Interview Question 3.5
+        /// Sorts the contents of a stack using another stack.
+        /// </summary>
+        public void Sort()
+        {
+            /// Secondary stack.
+            var tempStack = new MyStack<T>();
+
+            /// While the primary stack is not empty
+            while(!IsEmpty())
+            {
+                /// Take the first element from the primary stack.
+                var temp = Pop();
+                
+                /// The following section pushes the contents of the primary stack into the 
+                /// secondary stack in descending order, biggest number on the top.
+                if(tempStack.IsEmpty() || CompareTValues(temp, tempStack.Peek()) > 0)
+                    /// If the secondary stack is empty or the value taken from the primary stack
+                    /// is bigger than the top value of the secondary value
+                    /// Push the value to the secondary stack.
+                {
+                    tempStack.Push(temp);
+                }
+                else
+                {
+                    /// Otherwise, pops elements from the secondary stack until either the stack becomes empty or
+                    /// the value from the primary stack is bigger or equal to the top value of the secondary
+                    /// stack. Then place the value in the second stack.
+                    while(!tempStack.IsEmpty() && CompareTValues(temp, tempStack.Peek()) < 0)
+                    {
+                        Push(tempStack.Pop());
+                    }
+                    tempStack.Push(temp);
+                }
+            }
+
+            /// Reverse the order of the secondary stack into the primary stack,
+            /// which completes the sort in ascending order.
+            while(!tempStack.IsEmpty())
+            {
+                Push(tempStack.Pop());
+            }
+        }
     }
 
     /// <summary>
@@ -609,6 +655,140 @@ namespace Ch3_Stacks_Queues
         public bool IsEmpty()
         {
             return (base.IsEmpty() && queue.IsEmpty());
+        }
+    }
+
+    /// The following data structures are for the interview question 3.6
+    /// The Animal Shelter with an adoption queue where the oldest animal or a certain type of pet 
+    /// (eg. Cat or Dog) in terms of arrival time must be adoppted first.
+
+    /// <summary>
+    /// Type: Pet(Abstract)
+    /// </summary>
+    internal abstract class Pet
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+
+        public Pet(string name, string desc)
+        {
+            Name = name;
+            Description = desc;
+        }
+
+        public virtual string Type() { return "Unknown"; }
+    }
+
+    /// <summary>
+    /// Type: Dog
+    /// </summary>
+    internal class Dog : Pet
+    {
+        public Dog(string name, string desc) : base(name, desc) { }
+        public override string Type() { return "Dog"; }
+    }
+
+    /// <summary>
+    /// Type: Cat
+    /// </summary>
+    internal class Cat : Pet
+    {
+        public Cat(string name, string desc) : base(name, desc) { }
+
+        public override string Type()
+        {
+            return "Cat";
+        }
+    }
+
+    /// <summary>
+    /// Type: AnimalShelter
+    /// Instead of implementing separate queues for Dogs and Cats, I've decided to 
+    /// incorate them into a single queue for a number of reasons.
+    /// 1. Having a single queue for all animals is easier for expansion into more types of
+    /// pets in the future. For instance, instead of modifying an already up and running modules,
+    /// we can safely add more pet types inherited from the interface, Pet and use the method: DequeueType()
+    /// 2. In real life, this type of queue will have modified dequeue method which one can pop a node in the middle,
+    /// and reducing the need for multi queues.
+    /// 
+    /// Downside of Having a single queuue is that dequeueing a specific type of pet will require Theta(n), becuase
+    /// primary queue is reconstructed due to the nature of the queue.
+    /// </summary>
+    internal class AnimalShelter
+    {
+        /// <summary>
+        /// Adoption Queue.
+        /// </summary>
+        MyQueue<Pet> adoptionQueue = new MyQueue<Pet>();
+
+        public AnimalShelter() { }
+
+        /// <summary>
+        /// Method: Enqueue
+        /// </summary>
+        /// <param name="animal"></param>
+        public void Enqueue(Pet animal)
+        {
+            adoptionQueue.Enqueue(animal);
+        }
+
+        /// <summary>
+        /// Method: DequueAny
+        /// This method simply ejects the oldest pet in terms of arrival time.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public Pet DequeueAny()
+        {
+            if (adoptionQueue.IsEmpty()) throw new InvalidOperationException("No Animals Available ATM");
+            return adoptionQueue.Dequeue();
+        }
+
+        /// <summary>
+        /// Method: DequeueType
+        /// This method returns the oldest pet in a certain type (eg. Cat or Dog) in terms of arrival time.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public Pet DequeueType(string type)
+        {
+            bool found = false;
+            Pet animal;
+            var tempQueue = new MyQueue<Pet>(); /// For reconstruction of the adoptionQueue.
+            do
+            {
+                if (adoptionQueue.IsEmpty()) throw new InvalidOperationException($"No {type} is available to adopt, Sorry... Maybe differnt type?");
+                            /// Just in case, there are no animals available for adoption.
+                
+                animal = adoptionQueue.Dequeue();
+                            /// Let's take the oldest pet in terms of arrival time.
+                
+                if (animal.Type() == type) { found = true; }
+                            /// Found, Great!!!
+                else
+                {
+                    /// If it's not it, then let's put it into the new queue.
+                    tempQueue.Enqueue(animal);
+                }
+            } while (!adoptionQueue.IsEmpty() && !found); /// Until we go through all the animals or if it's found.
+
+            /// Finish constructing the new queue.
+            while (!adoptionQueue.IsEmpty()) tempQueue.Enqueue(adoptionQueue.Dequeue());
+            adoptionQueue = tempQueue;
+
+            if (found) return animal;
+            else throw new InvalidOperationException($"Sorry no {type} is available to adopt.");
+        }
+
+        public Pet DequeueCat()
+        {
+            return DequeueType("Cat");
+        }
+
+        public Pet DequeueDog()
+        {
+            return DequeueType("Dog");
         }
     }
 }
